@@ -51,20 +51,27 @@ extracted <- data_merged %>% select(Subject, ID, contains("mean"),contains("std"
 extracted$ID <- activity_labels[extracted$ID,2]
 
 # 4. Appropriately labels the data set with descriptive variable names
-names(extracted)[2]="Activity"
+names(extracted)[2] = "Activity"
+names(extracted)<-gsub("^t", "Time domain signal:", names(extracted))
+names(extracted)<-gsub("^f", "Frequency domain signal: ", names(extracted))
+names(extracted)<-gsub("-", ", ", names(extracted))
+names(extracted)<-gsub("mean\\(\\)", " mean value ", names(extracted))
+names(extracted)<-gsub("std\\(\\)", " standart deviation ", names(extracted))
+names(extracted)<-gsub("Acc", " acceleration", names(extracted))
+names(extracted)<-gsub("AccJerk", " acceleration jerk", names(extracted))
+names(extracted)<-gsub("GyroJerk", " angular velocity jerk", names(extracted))
+names(extracted)<-gsub("Gyro", " angular velocity", names(extracted))
+names(extracted)<-gsub("Mag", " magnitude", names(extracted))
+names(extracted)<-gsub("tBody", "TimeBody", names(extracted))
+names(extracted)<-gsub("BodyBody", "body", names(extracted))
+names(extracted)<-gsub("angle", "Angle", names(extracted))
+names(extracted)<-gsub("gravity", "Gravity", names(extracted))
+names(extracted)<-gsub("..X", "in X direction", names(extracted))
+names(extracted)<-gsub("..Y", "in Y direction", names(extracted))
+names(extracted)<-gsub("..Z", "in Z direction", names(extracted))
 
-names(extracted) <- sub(x = extracted,pattern = '^t',replacement = 'Time domain signal: ')
-names(extracted) <- sub(x = extracted,pattern = '^f',replacement = 'Frequency domain signal: ')
-names(extracted) <- sub(x = extracted,pattern = '-',replacement = ', ')
-names(extracted) <- sub(x = extracted,pattern = 'mean\\(\\)',replacement = ' mean value ')
-names(extracted) <- sub(x = extracted,pattern = 'std\\(\\)',replacement = ' standart deviation ')
-names(extracted) <- sub(x = extracted,pattern = '-X',replacement = 'in X direction')
-names(extracted) <- sub(x = extracted,pattern = '-Y',replacement = 'in Y direction')
-names(extracted) <- sub(x = extracted,pattern = '-Z',replacement = 'in Z direction')
-names(extracted) <- sub(x = extracted,pattern = 'AccJerk',replacement = ' acceleration jerk')
-names(extracted) <- sub(x = extracted,pattern = 'Acc',replacement = ' acceleration')
-names(extracted) <- sub(x = extracted,pattern = 'GyroJerk',replacement = ' angular velocity jerk')
-names(extracted) <- sub(x = extracted,pattern = 'Gyro',replacement = ' angular velocity')
-names(extracted) <- sub(x = extracted,pattern = 'Mag',replacement = ' magnitude')
+# 5. create a second, independent tidy data set with the average of each variable for each activity and each subject
+data_cleaned <- extracted %>% group_by(Subject, Activity)%>% summarize_all(list(mean))
 
-colnames(X_clean) <- extracted
+#save as txt file
+write.table(data_cleaned,file = 'tidy_data.txt',row.names = F)
