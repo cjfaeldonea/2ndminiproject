@@ -91,12 +91,12 @@ plot4 <- function(data) {
          col=c("black", "red", "blue"), 
          legend=names(HPC_dat[,7:9]), 
          bty="n")
-  # Plot 4.3
+  # Plot 4.c
   plot(HPC_dat$Time,HPC_dat$Voltage, 
        ylab="Voltage", 
        xlab="datetime", 
        type="l")
-  # Plot 4.4
+  # Plot 4.d
   plot(HPC_dat$Time,HPC_dat$Global_reactive_power, 
        ylab="Global_reactive_power", 
        xlab="datetime", 
